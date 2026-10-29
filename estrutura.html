@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Teste(alteravel)</title>
+        <style>
+            *{
+                box-sizing: border-box;
+            }
+                body{
+                    background-color: #350a06;
+                    color: #350a06;
+                    font-family: Arial, sans-serif;
+                    text-align: center;
+                    padding: 40px 16px;
+                }
+                .resultado{
+                    margin: 20px auto;
+                }
+                input,
+                button{
+                    padding: 10px;
+                    margin: 6px;
+                    font-size: 16px;
+                }
+                button{
+                    cursor: pointer;
+                }
+            </style>
+    </head>
+    <body>
+        <h1>Bem-vindo ao teste.</h1>
+        <div class="resultado">
+            <input type="number" id="palpite" placeholder="testa ai">
+            <p id="batata">resultado.</p>
+        <button id="enviar" onclick="verificarPalpite()" disabled>
+            enviar palpite
+        </button>
+        <p id="mensagem">Clique em "Start" para começar.</p>
+        <p id="tentativas"></p>
+        </div>
+        <div class="botao">
+            <p>escolha um número, tendo 4 tentativas.</p>
+            <button onclick="start()">Start</button>
+            <button onclick="reset()">reset</button>
+        </div>
+        <script>
+            function start(){
+
+            }
+        </script>
+    </body>
+</html>
