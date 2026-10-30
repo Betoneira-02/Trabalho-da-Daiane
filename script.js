@@ -1,0 +1,161 @@
+let currentCategory = '';
+let currentDifficulty = '';
+let currentXPValue = 15;
+let userXP = 0;
+let userLevel = 1;
+let activeQuestions = [];
+let answeredQuestionsCount = 0;
+let correctAnswersCount = 0;
+const questionBank = {
+    'Leia': {
+        'Fácil': [
+            [
+                { q: "Qual o principal objetivo de um texto informativo?", options: ["A) Contar uma história fictícia", "B) Transmitir dados reais e esclarecer um fato", "C) Expressar sentimentos profundos", "D) Convencer o leitor a comprar algo"], answer: 1 },
+                { q: "O que significa inferir em um texto?", options: ["A) Copiar o texto palavra por palavra", "B) Concluir algo com base em indícios do texto", "C) Mudar o final da história", "D) Ignorar as entrelinhas"], answer: 1 },
+                { q: "Em uma narrativa, quem é o personagem principal?", options: ["A) O antagonista", "B) O narrador", "C) O protagonista", "D) O coadjuvante"], answer: 2 }
+            ],
+            [
+                { q: "O gênero textual 'receita culinária' tem como finalidade:", options: ["A) Instruir o leitor a fazer um prato", "B) Emocionar com uma lembrança", "C) Criticar um restaurante", "D) Relatar uma notícia"], answer: 0 },
+                { q: "O que é um sinônimo?", options: ["A) Palavras com sentidos opostos", "B) Palavras com significados parecidos", "C) Palavras escritas de forma idêntica", "D) Erros ortográficos"], answer: 1 },
+                { q: "Qual a função do título em um artigo?", options: ["A) Enfeitar a página", "B) Ocultar o assunto", "C) Despertar interesse e indicar o tema", "D) Aumentar o número de linhas"], answer: 2 }
+            ]
+        ],
+        'Médio': [
+            [
+                { q: "O que caracteriza a linguagem denotativa?", options: ["A) Uso de metáforas e sentidos figurados", "B) Sentido real, literal e objetivo da palavra", "C) Linguagem informal de internet", "D) Poesia rimada"], answer: 1 },
+                { q: "O trecho 'O vento sussurrava segredos' apresenta qual figura de linguagem?", options: ["A) Metáfora", "B) Hipérbole", "C) Personificação (Prosopopeia)", "D) Antítese"], answer: 2 },
+                { q: "Qual a principal característica de uma crônica?", options: ["A) Ser um texto longo dividido em capítulos", "B) Retatar fatos do cotidiano com reflexão", "C) Divulgar descobertas científicas", "D) Apresentar leis jurídicas"], answer: 1 }
+            ]
+        ],
+        'Difícil': [
+            [
+                { q: "O que define um argumento de autoridade em um texto dissertativo?", options: ["A) A opinião pessoal do autor sem provas", "B) A citação de especialistas ou dados de órgãos confiáveis", "C) O uso de ofensas verbais", "D) Histórias inventadas para emocionar"], answer: 1 },
+                { q: "Na coesão textual, o que são conectivos interfrasais?", options: ["A) Palavras que unem frases ou orações estabelecendo lógica", "B) Erros de pontuação", "C) Acentuação gráfica obrigatória", "D) Verbos no infinitivo"], answer: 0 },
+                { q: "O efeito de ironia em um texto ocorre quando:", options: ["A) Há redundância excessiva", "B) Ocorre o sentido oposto ao que a palavra literalmente expressa", "C) O texto é escrito em língua estrangeira", "D) Usa-se muitas gírias"], answer: 1 }
+            ]
+        ]
+    },'Redação': {
+        'Fácil': [
+            [
+                { q: "O que compõe a estrutura básica de um parágrafo dissertativo?", options: ["A) Tópico frasal, desenvolvimento e conclusão", "B) Apenas rimas", "C) Desenhos e tópicos em lista", "D) Perguntas sem respostas"], answer: 0 },
+                { q: "Qual o tempo verbal predominante na redação dissertativa-argumentativa?", options: ["A) Futuro do pretérito", "B) Presente do indicativo", "C) Pretérito mais-que-perfeito", "D) Imperativo"], answer: 1 },
+                { q: "O que deve ser evitado em uma redação formal?", options: ["A) O uso da norma-padrão", "B) Argumentos consistentes", "C) O uso de gírias e marcas de oralidade", "D) Conectivos adequados"], answer: 2 }
+            ]
+        ],
+        'Médio': [
+            [
+                { q: "Qual a função da introdução em uma redação modelo ENEM?", options: ["A) Apresentar a tese e os argumentos que serão defendidos", "B) Resolver todos os problemas da sociedade", "C) Apenas contar uma piada inicial", "D) Finalizar o texto abruptamente"], answer: 0 },
+                { q: "O que é uma 'tese' na redação?", options: ["A) O título do texto", "B) O ponto de vista central defendido pelo autor", "C) A lista de materiais", "D) A assinatura do aluno"], answer: 1 },
+                { q: "O elemento coesivo 'Portanto' introduz uma ideia de:", options: ["A) Oposição", "B) Conclusão", "C) Adição", "D) Condição"], answer: 1 }
+            ]
+        ],
+        'Difícil': [
+            [
+                { q: "Na proposta de intervenção (Competência 5 do ENEM), quais são os 5 elementos obrigatórios?", options: ["A) Agente, Ação, Meio/Modo, Efeito e Detalhamento", "B) Introdução, Tese, Parágrafo 1, Parágrafo 2 e Fechamento", "C) Rima, Métrica, Estrofe, Verso e Rito", "D) Sujeito, Verbo, Objeto, Adjunto e Pontuação"], answer: 0 },
+                { q: "O que caracteriza um argumento falacioso?", options: ["A) Um argumento lógico e impecável", "B) Um raciocínio falso que parece verdadeiro, mas é inválido", "C) Uma citação direta de filósofo", "D) Dados estatísticos oficiais"], answer: 1 },
+                { q: "Qual a utilidade do repertório sociocultural produtivo?", options: ["A) Encher linguiça para atingir o mínimo de linhas", "B) Legitimar argumentos com referências externas pertinentes", "C) Demonstrar apenas conhecimento de filmes infantis", "D) Substituir a necessidade de ter uma tese"], answer: 1 }
+            ]
+        ]
+    },'Inglês': {
+        'Fácil': [
+            [
+                { q: "Qual a tradução correta para a palavra 'Book'?", options: ["A) Caneta", "B) Livro", "C) Mesa", "D) Caderno"], answer: 1 },
+                { q: "Como se diz 'Obrigado' em inglês?", options: ["A) Please", "B) Sorry", "C) Thank you", "D) Hello"], answer: 2 },
+                { q: "Qual pronome completa a frase: '___ am a student.'", options: ["A) He", "B) You", "C) I", "D) They"], answer: 2 }
+            ]
+        ],
+        'Médio': [
+            [
+                { q: "Qual o passado simples (Past Simple) do verbo 'to go'?", options: ["A) Gone", "B) Went", "C) Goes", "D) Going"], answer: 1 },
+                { q: "O que significa a expressão idiomática 'Piece of cake'?", options: ["A) Um pedaço de bolo", "B) Algo muito fácil de fazer", "C) Uma festa de aniversário", "D) Ficar com fome"], answer: 1 },
+                { q: "Qual alternativa completa corretamente: 'She _____ English every day.'", options: ["A) study", "B) studies", "C) studying", "D) studied"], answer: 1 }
+            ]
+        ],
+        'Difícil': [
+            [
+                { q: "Qual a forma correta do Present Perfect para 'Eu já estive em Londres'?", options: ["A) I was in London", "B) I have already been to London", "C) I had be in London", "D) I will be in London"], answer: 1 },
+                { q: "O que significa o 'phrasal verb' 'give up'?", options: ["A) Desistir / Abandonar", "B) Continuar tentando", "C) Entregar um presente", "D) Levantar-se"], answer: 0 },
+                { q: "Identifique a estrutura correta de uma frase na voz passiva (Passive Voice):", options: ["A) The dog chased the cat.", "B) The cat was chased by the dog.", "C) The cat chases the dog.", "D) The dog is chasing."], answer: 1 }
+            ]
+        ]
+    }
+}
+function goToScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
+    document.getElementById(screenId).classList.add('active');
+}
+function selectCategory(category) {
+    currentCategory = category;
+    document.getElementById('diff-title').innerText = category;
+    goToScreen('screen-difficulty');
+}
+function selectDifficulty(difficulty) {
+    currentDifficulty = difficulty;
+    if (difficulty === 'Fácil') currentXPValue = 15;
+    if (difficulty === 'Médio') currentXPValue = 30;
+    if (difficulty === 'Difícil') currentXPValue = 60;
+    document.getElementById('reward-tag').innerText = `Recompensa: +${currentXPValue} XP`;
+    document.getElementById('challenge-header').innerText = `${currentCategory} (${currentDifficulty})`;
+    const availableSets = questionBank[currentCategory][currentDifficulty];
+    const randomIndex = Math.floor(Math.random() * availableSets.length);
+    activeQuestions = availableSets[randomIndex];
+    answeredQuestionsCount = 0;
+    correctAnswersCount = 0;
+    document.getElementById('btn-finish').style.display = 'none';
+    renderQuestions();
+    goToScreen('screen-challenge');
+}
+function renderQuestions() {
+    const container = document.getElementById('questions-container');
+    container.innerHTML = '';
+    activeQuestions.forEach((item, qIndex) => {
+        let optionsHtml = '';
+        item.options.forEach((opt, optIndex) => {
+            optionsHtml += `<button class="option-btn" onclick="checkAnswer(${qIndex}, ${optIndex}, this)">${opt}</button>`;
+        });
+        container.innerHTML += `
+            <div class="question-box" id="q-box-${qIndex}">
+                <div class="question-title">${qIndex + 1}. ${item.q}</div>
+                <div class="options-group" id="options-${qIndex}">
+                    ${optionsHtml}
+                </div>
+            </div>
+    });
+}
+function checkAnswer(questionIndex, selectedOptionIndex, buttonElement) {
+    const questionBox = document.getElementById(`options-${questionIndex}`);
+    const optionButtons = questionBox.querySelectorAll('.option-btn');
+    optionButtons.forEach(btn => btn.disabled = true);
+    const correctIndex = activeQuestions[questionIndex].answer;
+    if (selectedOptionIndex === correctIndex) {
+        buttonElement.classList.add('correct');
+        correctAnswersCount++;
+    } else {
+        buttonElement.classList.add('incorrect');
+        optionButtons[correctIndex].classList.add('correct');
+    }
+    answeredQuestionsCount++;
+    if (answeredQuestionsCount === activeQuestions.length) {
+        document.getElementById('btn-finish').style.display = 'block';
+    }
+}
+function finishChallenge(){
+    let earnedXP = Math.round((correctAnswersCount / 3) * currentXPValue);
+    userXP += earnedXP;
+    userLevel = Math.floor(userXP / 100) + 1;
+    document.getElementById('stat-xp').innerText = `XP: ${userXP} pts`;
+    document.getElementById('stat-level').innerText = `Nível: ${userLevel}`;
+    document.getElementById('correct-count').innerText = correctAnswersCount;
+    let msg = "Bom trabalho! Continue praticando para gabaritar.";
+    if (correctAnswersCount === 3) {
+        msg = `Perfeito! Você ganhou todos os +${earnedXP} XP possíveis! 🏆`;
+    } else if (correctAnswersCount === 0) {
+        msg = "Não desanime! Revise os conceitos e tente novamente para subir de nível.";
+    } else {
+        msg = `Você faturou +${earnedXP} XP pelo seu desempenho!`;
+    }
+    document.getElementById('result-message').innerText = msg;
+    goToScreen('screen-success');
+}
