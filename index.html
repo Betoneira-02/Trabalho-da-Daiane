@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Título Teste - Jogo</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                background-color: #350a06;
+                color: #f5f5f5;
+                font-family: Arial, sans-serif;
+                text-align: center;
+                padding: 40px 16px;
+            }
+            .saudacao {
+                margin-top: 50px;
+            }
+            input, select, button {
+                padding: 10px;
+                margin: 5px;
+                font-size: 1rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="saudacao">
+            <input type="text" id="nome" placeholder="Seu nome aqui.">
+            
+            <select id="nivel" class="nivel">
+                <option value="Basico">Básico</option>
+                <option value="Medio">Médio</option>
+                <option value="Difícil">Difícil</option>
+                <option value="Avancado">Avançado</option>
+            </select>
+            
+            <button onclick="iniciaJogo()">
+                Iniciar
+            </button>
+            
+            <p id="mensagem"></p>
+        </div>
+        
+        <script src="script.js"></script>
+    </body>
+</html>
