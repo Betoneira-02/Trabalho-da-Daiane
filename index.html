@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Desafios</title>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --gray-text: #6b7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            color: var(--gray-text);
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.875rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: var(--text-color);
+            margin-top: 1.5rem;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+
+        .challenge-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .challenge-box p {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- TELA 1: INICIAL -->
+        <div id="screen-home" class="screen active">
+            <h1>Plataforma de Estudos</h1>
+            <h2>Escolha uma categoria para começar:</h2>
+            <div class="btn-group">
+                <button onclick="selectCategory('Leia')">Leia</button>
+                <button onclick="selectCategory('Redação')">Redação</button>
+                <button onclick="selectCategory('Inglês')">Inglês</button>
+            </div>
+        </div>
+
+        <!-- TELA 2: ESCOLHA DE DIFICULDADE -->
+        <div id="screen-difficulty" class="screen">
+            <h1 id="diff-title">Categoria</h1>
+            <h2>Escolha dentre as seguintes dificuldades:</h2>
+            <div class="btn-group">
+                <button onclick="selectDifficulty('Fácil')">Fácil</button>
+                <button onclick="selectDifficulty('Médio')">Médio</button>
+                <button onclick="selectDifficulty('Difícil')">Difícil</button>
+            </div>
+            <button class="btn-secondary" onclick="goToScreen('screen-home')">Voltar</button>
+        </div>
+
+        <!-- TELA 3: DESAFIO GERADO -->
+        <div id="screen-challenge" class="screen">
+            <h1 id="challenge-header">Desafio</h1>
+            <h2 id="challenge-subheader">Sua missão de hoje:</h2>
+            
+            <div class="challenge-box">
+                <p id="challenge-text">Carregando desafio...</p>
+            </div>
+
+            <div class="btn-group">
+                <button onclick="resetApp()">Voltar ao Início</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Variáveis de controle de estado
+        let currentCategory = '';
+        let currentDifficulty = '';
+
+        // Base de dados simulada de desafios
+        const challenges = {
+            'Leia': {
+                'Fácil': 'Leia um artigo curto de 5 minutos sobre um hábito saudável e anote 1 palavra nova.',
+                'Médio': 'Leia uma crônica e resuma o sentimento principal do autor em até 3 linhas.',
+                'Difícil': 'Leia um artigo científico introdutório e escreva uma crítica reflexiva de um parágrafo.'
+            },
+            'Redação': {
+                'Fácil': 'Escreva um parágrafo curto (tópico frasal + desenvolvimento) sobre "A importância da água".',
+                'Médio': 'Elabore uma introdução completa de redação modelo ENEM sobre o tema "Os impactos do lixo eletrônico".',
+                'Difícil': 'Escreva uma redação dissertativa-argumentativa completa sobre "Os limites da inteligência artificial na sociedade moderna".'
+            },
+            'Inglês': {
+                'Fácil': 'Traduza mentalmente 5 objetos ao seu redor para o inglês e formule frases simples com eles.',
+                'Médio': 'Ouça uma música em inglês, tente identificar 3 expressões idiomáticas e descubra seus significados.',
+                'Difícil': 'Escreva um texto de opinião de 5 linhas em inglês discutindo as vantagens do trabalho remoto.'
+            }
+        };
+
+        // Função para alternar entre telas
+        function goToScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // Quando o usuário escolhe a categoria na Tela 1
+        function selectCategory(category) {
+            currentCategory = category;
+            document.getElementById('diff-title').innerText = category;
+            goToScreen('screen-difficulty');
+        }
+
+        // Quando o usuário escolhe a dificuldade na Tela 2
+        function selectDifficulty(difficulty) {
+            currentDifficulty = difficulty;
+            
+            // Atualiza os textos da tela de desafio
+            document.getElementById('challenge-header').innerText = `${currentCategory} (${currentDifficulty})`;
+            document.getElementById('challenge-text').innerText = challenges[currentCategory][currentDifficulty];
+            
+            goToScreen('screen-challenge');
+        }
+
+        // Retorna para a tela inicial limpando os estados
+        function resetApp() {
+            currentCategory = '';
+            currentDifficulty = '';
+            goToScreen('screen-home');
+        }
+    </script>
+</body>
+</html>
