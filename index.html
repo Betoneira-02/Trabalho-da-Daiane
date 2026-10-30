@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafios Paraná - Metas Educacionais</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="user-stats">
+            <span id="stat-level">Nível: 1 (Estudante PR)</span>
+            <span id="stat-xp">XP: 0 pts</span>
+        </div>
+        <div id="screen-home" class="screen active">
+            <h1>Plataforma de Metas Paraná</h1>
+            <h2>Escolha qual plataforma você quer treinar hoje:</h2>
+            <div class="goal-banner">
+                 Meta da Semana: Complete 3 desafios para garantir seus pontos!
+            </div>
+            <div class="btn-group">
+                <button onclick="selectCategory('Leia Paraná')"> Leia Paraná </button>
+                <button onclick="selectCategory('Inglês Paraná')"> Inglês Paraná</button>
+                <button onclick="selectCategory('Redação Paraná')"> Redação Paraná</button>
+            </div>
+        </div>
+        <div id="screen-difficulty" class="screen">
+            <h1 id="diff-title">Plataforma</h1>
+            <h2>Escolha o nível de desafio para pontuar na meta:</h2>
+            <div class="btn-group">
+                <button onclick="selectDifficulty('Fácil')">Fácil <span style="font-size:0.8rem; opacity:0.8;">(+15 XP)</span></button>
+                <button onclick="selectDifficulty('Médio')">Médio <span style="font-size:0.8rem; opacity:0.8;">(+30 XP)</span></button>
+                <button onclick="selectDifficulty('Difícil')">Difícil <span style="font-size:0.8rem; opacity:0.8;">(+60 XP)</span></button>
+            </div>
+            <button class="btn-secondary" onclick="goToScreen('screen-home')">Voltar</button>
+        </div>
+        <div id="screen-challenge" class="screen">
+            <div id="reward-tag" class="reward-badge">Recompensa: 15 XP</div>
+            <h1 id="challenge-header">Desafio</h1>
+            <h2>Responda às 3 questões para cumprir sua meta:</h2>
+            <div id="questions-container"></div>
+            <div class="btn-group">
+                <button id="btn-finish" style="display:none;" onclick="finishChallenge()">Ver Resultado e Salvar XP</button>
+                <button class="btn-secondary" onclick="goToScreen('screen-home')">Abandonar por Agora</button>
+            </div>
+        </div>
+        <div id="screen-success" class="screen">
+            <h1>Meta Cumprida! 🚀</h1>
+            <h2>Você acertou <span id="correct-count">0</span> de 3 questões!</h2>
+            <div class="question-box" style="text-align: center;">
+                <p id="result-message">Parabéns pelo esforço em cumprir sua meta!</p>
+            </div>
+            <div class="btn-group">
+                <button onclick="goToScreen('screen-home')">Escolher Outra Plataforma</button>
+            </div>
+        </div>
+    </div>
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
