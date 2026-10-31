@@ -1,0 +1,88 @@
+let currentCategory = '';
+let currentDifficulty = '';
+let currentXPValue = 15;
+let userXP = 0;
+let userLevel = 1;
+let activeQuestions = [];
+let answeredQuestionsCount = 0;
+let correctAnswersCount = 0;
+function goToScreen(screenId){
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
+    document.getElementById(screenId).classList.add('active');
+}
+function selectCategory(category){
+    currentCategory = category;
+    document.getElementById('diff-title').innerText = category;
+    goToScreen('screen-difficulty');
+}
+function selectDifficulty(difficulty){
+    currentDifficulty = difficulty;
+    if (difficulty === 'Fácil') currentXPValue = 15;
+    if (difficulty === 'Médio') currentXPValue = 30;
+    if (difficulty === 'Difícil') currentXPValue = 60; 
+    document.getElementById('reward-tag').innerText = `Recompensa: +${currentXPValue} XP`;
+    document.getElementById('challenge-header').innerText = `${currentCategory} (${currentDifficulty})`;
+    const availableSets = questionBank[currentCategory][currentDifficulty];
+    const randomIndex = Math.floor(Math.random() * availableSets.length);
+    activeQuestions = availableSets[randomIndex];   
+    answeredQuestionsCount = 0;
+    correctAnswersCount = 0;
+    document.getElementById('btn-finish').style.display = 'none';
+    renderQuestions();
+    goToScreen('screen-challenge');
+}
+function renderQuestions(){
+    const container = document.getElementById('questions-container');
+    container.innerHTML = '';
+    activeQuestions.forEach((item, qIndex) => {
+        let optionsHtml = '';
+        item.options.forEach((opt, optIndex) => {
+            optionsHtml += `<button class="option-btn" onclick="checkAnswer($,{qIndex} , {$optIndex}, this)">${opt}</button>`;
+        });
+        container.innerHTML += `
+            <div class="question-box" id="q-box-${qIndex}">
+                <div class="question-title">${qIndex + 1}. ${item.q}</div>
+                <div class="options-group" id="options-${qIndex}">
+                    ${optionsHtml}
+                </div>
+            </div>
+        `;
+    });
+}
+function checkAnswer(questionIndex, selectedOptionIndex, buttonElement){
+    const questionBox = document.getElementById(`options-${questionIndex}`);
+    const optionButtons = questionBox.querySelectorAll('.option-btn');
+    optionButtons.forEach(btn => btn.disabled = true);
+    const correctIndex = activeQuestions[questionIndex].answer;
+    if (selectedOptionIndex === correctIndex){
+        buttonElement.classList.add('correct');
+        correctAnswersCount++;
+    } else {
+        buttonElement.classList.add('incorrect');
+        optionButtons[correctIndex].classList.add('correct');
+    }   
+    answeredQuestionsCount++;
+    if (answeredQuestionsCount === activeQuestions.length){
+        document.getElementById('btn-finish').style.display = 'block';
+    }
+}
+function finishChallenge(){
+    let earnedXP = Math.round((correctAnswersCount / 3) * currentXPValue);
+    userXP += earnedXP;
+    userLevel = Math.floor(userXP / 100) + 1;  
+    document.getElementById('stat-xp').innerText = `XP: ${userXP} pts`;
+    document.getElementById('stat-level').innerText = `Nível: ${userLevel} (Estudante PR)`;
+    document.getElementById('correct-count').innerText = correctAnswersCount
+    let msg = "Bom trabalho! Continue cumprindo suas metas diárias.";
+    if (correctAnswersCount === 3) {
+        msg = `Excelente! Você gabaritou e garantiu todos os +${earnedXP} XP da sua meta! 🏆`;
+    } else if (correctAnswersCount === 0) {
+        msg = "Não desanime! Revise o conteúdo na plataforma oficial e tente novamente.";
+    } else {
+        msg = `Muito bem! Você somou +${earnedXP} XP para o seu ranking semanal!`;
+    }
+    document.getElementById('result-message').innerText = msg;
+    goToScreen('screen-success');
+}
