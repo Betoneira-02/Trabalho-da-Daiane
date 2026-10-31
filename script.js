@@ -19,12 +19,12 @@ document.getElementById('btnEnviar').addEventListener('click', function() {
         `;
     } else if (plataforma === 'redacao') {
         respostaDica = `
-            <p><strong> Dica para a Redação Paraná:</strong> Lembre-se da estrutura básica: Introdução (apresentar o tema), Desenvolvimento (argumentar com fatos) e Conclusão (proposta de intervenção).</p>
+            <p><strong> Dica para a Redação Paraná:</strong> Lembre-se da estrutura básica: Introdução, Desenvolvimento e Conclusão.</p>
             <p><em>Como proceder:</em> Em vez de pensar no texto todo de uma vez, escreva uma frase por parágrafo respondendo: "O que é?", "Por que acontece?" e "Como resolver?".</p>
         `;
     } else if (plataforma === 'ingles') {
         respostaDica = `
-            <p><strong> Dica para o Inglês Paraná:</strong> Foque nas imagens de contexto e nas palavras cognatas (palavras que parecem com o português).</p>
+            <p><strong> Dica para o Inglês Paraná:</strong> Foque nas imagens de contexto e nas palavras cognatas.</p>
             <p><em>Como proceder:</em> Tente traduzir apenas o verbo principal da frase para entender a ação que está sendo pedida, sem precisar traduzir palavra por palavra.</p>
         `;
     }
