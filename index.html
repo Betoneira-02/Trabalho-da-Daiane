@@ -6,26 +6,12 @@
     <title>Auxiliar de Metas - Paraná</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<!-- HTML -->
-<p class="introducao">
-    Bem-vindo ao nosso site! Neste artigo, vamos explorar os conceitos fundamentais de HTML e como criar suas primeiras páginas web de forma simples e prática.
-</p>
-
-<!-- CSS (para estilizar a introdução e torná-la maior) -->
-<style>
-    .introducao {
-        font-size: 1.2rem; /* Aumenta o tamanho do texto */
-        font-weight: bold; /* Deixa em negrito (opcional) */
-        color: #333;       /* Cor do texto */
-    }
-</style>
 <body>
     <div class="container">
         <header>
             <h1>Cumprimento de Metas</h1>
             <p>Selecione a plataforma e digite sua dúvida para receber uma dica e orientação.</p>
         </header>
-
         <main class="card">
             <div class="form-group">
                 <label for="plataforma">Escolha a Plataforma:</label>
@@ -36,21 +22,17 @@
                     <option value="ingles">Inglês Paraná</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label for="duvida">Qual é a sua dúvida ou questão?</label>
                 <textarea id="duvida" rows="4" placeholder="Descreva brevemente o que você precisa resolver..."></textarea>
             </div>
-
             <button id="btnEnviar">Pedir Dica</button>
-
             <div id="resultado" class="hidden">
                 <h3>Orientação:</h3>
                 <div id="conteudoResposta"></div>
             </div>
         </main>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
